@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UsersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
@@ -16,8 +18,13 @@ class Users
     #[ORM\Column(length: 255)]
     private ?string $sub = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $section = null;
+    #[ORM\ManyToMany(targetEntity: Zones::class, inversedBy: 'users')]
+    private ?Collection $Zone;
+
+    public function __construct()
+    {
+        $this->Zone = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -36,24 +43,38 @@ class Users
         return $this;
     }
 
-    public function getSection(): ?int
+    /**
+     * @return Collection<int, Zones>
+     */
+    public function getZone(): Collection
     {
-        return $this->section;
+        return $this->Zone;
     }
 
-    public function setSection(?int $section): static
+    public function addZone(Zones $zone): static
     {
-        $this->section = $section;
+        if (!$this->Zone->contains($zone)) {
+            $this->Zone->add($zone);
+        }
 
         return $this;
     }
-    public function toJson(): array
+
+    public function removeZone(Zones $zone): static
+    {
+        $this->Zone->removeElement($zone);
+
+        return $this;
+    }    
+
+    
+    public function toArray(): array
     {
     
         return [
             'id' => $this->id,
             'sub' => $this->sub,
-            'section' => $this->section,
+            'zone' => $this->Zone->toArray(),
         ];
-    }    
+    }
 }

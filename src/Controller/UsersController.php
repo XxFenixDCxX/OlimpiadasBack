@@ -19,7 +19,7 @@ class UsersController extends AbstractController
 
         $usersArray = [];
         foreach ($users as $user) {
-            $usersArray[] = $user->toJson();
+            $usersArray[] = $user->toArray();
         }
         return $this->json($usersArray);
     }
@@ -29,8 +29,8 @@ class UsersController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        if (!isset($data['sub']) || !isset($data['section'])) {
-            return $this->json(['error' => 'Sub y Seccion requerida'], 400);
+        if (!isset($data['sub']) || empty($data['sub'])) {
+            return $this->json(['error' => 'El campo "sub" es requerido y no puede estar vacío'], 400);
         }
 
         $existingUser = $entityManager->getRepository(Users::class)->findOneBy([
@@ -43,7 +43,6 @@ class UsersController extends AbstractController
 
         $user = new Users();
         $user->setSub($data['sub']);
-        $user->setSection($data['section']);
 
         try {
             $entityManager->persist($user);
