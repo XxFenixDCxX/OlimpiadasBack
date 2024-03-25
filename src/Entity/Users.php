@@ -47,4 +47,13 @@ class Users
 
         return $this;
     }
+    public function toJson(): array
+    {
+    
+        return [
+            'id' => $this->id,
+            'sub' => $this->sub,
+            'section' => $this->section,
+        ];
+    }    
 }
