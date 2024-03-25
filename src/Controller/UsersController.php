@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Users;
+use App\Entity\Zones;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,6 +51,41 @@ class UsersController extends AbstractController
             return $this->json(['message' => 'Usuario creado correctamente'], 201);
         } catch (\Exception $e) {
             return $this->json(['error' => 'Error al crear el usuario'], 500);
+        }
+    }
+
+    #[Route('/users/{sub}', name: 'update_users_zones', methods: ['PUT'])]
+    public function update(string $sub, Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $user = $entityManager->getRepository(Users::class)->findOneBy(['sub' => $sub]);
+
+        if (!$user) {
+            return $this->json(['error' => 'Usuario no encontrado.'], 404);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['zones'])) {
+            return $this->json(['error' => 'Las zonas son requeridas.'], 400);
+        }
+
+        $zoneIds = $data['zones'];
+
+        // Limpiar las zonas actuales del usuario
+        $user->getZone()->clear();
+
+        foreach ($zoneIds as $zoneId) {
+            $zone = $entityManager->getRepository(Zones::class)->find($zoneId);
+            if ($zone) {
+                $user->addZone($zone);
+            }
+        }
+
+        try {
+            $entityManager->flush();
+            return $this->json(['message' => 'Zonas actualizadas correctamente para el usuario.'], 200);
+        } catch (\Exception $e) {
+            return $this->json(['error' => 'Error al actualizar las zonas del usuario.'], 500);
         }
     }
 }
