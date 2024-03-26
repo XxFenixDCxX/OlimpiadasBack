@@ -18,7 +18,7 @@ class UsersController extends AbstractController
         $usersRepository = $entityManager->getRepository(Users::class);
         $users = $usersRepository->findAll();
 
-        if(!isset($users) || empty($users)) {
+        if (empty($users)) {
             return $this->json(['error' => 'No hay usuarios'], 404);
         }
 
@@ -34,8 +34,8 @@ class UsersController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        if (!isset($data['sub']) || empty($data['sub'])) {
-            return $this->json(['error' => 'El campo "sub" es requerido y no puede estar vacío'], 400);
+        if (!isset($data['sub']) || empty($data['sub']) || !isset($data['email']) || empty($data['email'])) {
+            return $this->json(['error' => 'El campo "sub" y el "email" es requerido y no puede estar vacío'], 400);
         }
 
         $existingUser = $entityManager->getRepository(Users::class)->findOneBy([
@@ -48,6 +48,7 @@ class UsersController extends AbstractController
 
         $user = new Users();
         $user->setSub($data['sub']);
+        $user ->setEmail($data['email']);
 
         try {
             $entityManager->persist($user);

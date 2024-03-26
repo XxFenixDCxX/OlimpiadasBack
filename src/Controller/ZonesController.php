@@ -16,14 +16,14 @@ class ZonesController extends AbstractController
         $zonesRepository = $entityManager->getRepository(Zones::class);
         $zones = $zonesRepository->findAll();
 
-        if(!isset($zones) || empty($zones)) {
-            return $this->json(['error' => 'No hay zonas'], 404);
+        if (empty($zones)) {
+            throw $this->createNotFoundException('No hay zonas');
         }
 
-        $zonesArray = [];
-        foreach ($zones as $zone) {
-            $zonesArray[] = $zone->toArray();
-        }
+        $zonesArray = array_map(function (Zones $zone) {
+            return $zone->toArray();
+        }, $zones);
+
         return $this->json($zonesArray);
     }
 }
