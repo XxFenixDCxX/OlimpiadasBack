@@ -18,6 +18,10 @@ class UsersController extends AbstractController
         $usersRepository = $entityManager->getRepository(Users::class);
         $users = $usersRepository->findAll();
 
+        if(!isset($users) || empty($users)) {
+            return $this->json(['error' => 'No hay usuarios'], 404);
+        }
+
         $usersArray = [];
         foreach ($users as $user) {
             $usersArray[] = $user->toArray();
