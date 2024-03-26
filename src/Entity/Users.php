@@ -19,11 +19,14 @@ class Users
     private ?string $sub = null;
 
     #[ORM\ManyToMany(targetEntity: Zones::class, inversedBy: 'users')]
-    private ?Collection $Zone;
+    private ?Collection $Zones;
+
+    #[ORM\Column(length: 255)]
+    private ?string $email = null;
 
     public function __construct()
     {
-        $this->Zone = new ArrayCollection();
+        $this->Zones = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -48,13 +51,13 @@ class Users
      */
     public function getZone(): Collection
     {
-        return $this->Zone;
+        return $this->Zones;
     }
 
     public function addZone(Zones $zone): static
     {
-        if (!$this->Zone->contains($zone)) {
-            $this->Zone->add($zone);
+        if (!$this->Zones->contains($zone)) {
+            $this->Zones->add($zone);
         }
 
         return $this;
@@ -62,7 +65,7 @@ class Users
 
     public function removeZone(Zones $zone): static
     {
-        $this->Zone->removeElement($zone);
+        $this->Zones->removeElement($zone);
 
         return $this;
     }    
@@ -74,7 +77,20 @@ class Users
         return [
             'id' => $this->id,
             'sub' => $this->sub,
-            'zone' => $this->Zone->toArray(),
+            'email' => $this->email,
+            'zone' => $this->Zones->toArray(),
         ];
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
     }
 }

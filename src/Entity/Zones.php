@@ -93,7 +93,6 @@ class Zones
             'id' => $this->id,
             'start' => $this->start,
             'end' => $this->end,
-            'users' => $this->users->toArray(),
         ];
     }
 }
