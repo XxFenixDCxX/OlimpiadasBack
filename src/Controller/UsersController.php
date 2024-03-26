@@ -70,8 +70,6 @@ class UsersController extends AbstractController
         }
 
         $zoneIds = $data['zones'];
-
-        // Limpiar las zonas actuales del usuario
         $user->getZone()->clear();
 
         foreach ($zoneIds as $zoneId) {
