@@ -88,4 +88,7 @@ class UsersController extends AbstractController
             return $this->json(['error' => 'Error al actualizar las zonas del usuario.'], 500);
         }
     }
+
+
+    
 }

@@ -5,15 +5,16 @@ use App\Scheduler\Message\LotterySlots;
 use Symfony\Component\Scheduler\Attribute\AsSchedule;
 use Symfony\Component\Scheduler\Schedule;
 use Symfony\Component\Scheduler\ScheduleProviderInterface;
-use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Scheduler\RecurringMessage;
 
-
-#[AsSchedule]
+#[AsSchedule('default')]
 class LotteryTaskProvider implements ScheduleProviderInterface
 {
     public function getSchedule(): Schedule
     {
-        return new Schedule();
+        return (new Schedule())->add(
+            RecurringMessage::every('2 days', new LotterySlots())
+        );
     }
 }
 
