@@ -119,7 +119,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"sub\": \"auth0|660140be6ea7bff45010335a\",\n  \"email\": \"arkaitzcs@gmail.com\"\n}",
+							"raw": "{\n  \"sub\": \"auth0|660140be6ea7bff45010335a\",\n  \"email\": \"arkaitzcs@gmail.com\",\n  \"username\": \"arkaitzcs\"\n}",
 							"options": {
 								"raw": {
 									"headerFamily": "json",
