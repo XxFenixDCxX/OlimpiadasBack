@@ -81,6 +81,7 @@ class Users
             'id' => $this->id,
             'sub' => $this->sub,
             'email' => $this->email,
+            'username' => $this->username,
             'zone' => $this->Zones->toArray(),
         ];
     }
