@@ -76,13 +76,17 @@ class Users
     
     public function toArray(): array
     {
+        $zonesArray = [];
+        foreach ($this->Zones as $zone) {
+            $zonesArray[] = $zone->toArray();
+        }
     
         return [
             'id' => $this->id,
             'sub' => $this->sub,
             'email' => $this->email,
             'username' => $this->username,
-            'zone' => $this->Zones->toArray(),
+            'zones' => $zonesArray,
         ];
     }
 
