@@ -20,7 +20,7 @@ class UsersController extends AbstractController
         $user = $userRepository->findOneBy(['sub' => $sub]);
 
         if (!$user) {
-            return new JsonResponse(['message' => 'Usuario no encontrado'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Usuario no encontrado'], 404);
         }
         return $this->json($user->toArray());
     }
