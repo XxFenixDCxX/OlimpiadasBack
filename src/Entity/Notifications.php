@@ -25,6 +25,9 @@ class Notifications
     #[ORM\ManyToOne(inversedBy: 'notifications')]
     private ?Users $users = null;
 
+    #[ORM\Column]
+    private ?bool $isReaded = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -85,6 +88,19 @@ class Notifications
             'subject' => $this->Subject,
             'short_text' => $this->ShortText,
             'long_message' => $this->LongMessage,
+            'is_readed' => $this->isReaded
         ];
+    }
+
+    public function isIsReaded(): ?bool
+    {
+        return $this->isReaded;
+    }
+
+    public function setIsReaded(bool $isReaded): static
+    {
+        $this->isReaded = $isReaded;
+
+        return $this;
     }
 }
