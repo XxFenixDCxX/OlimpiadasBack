@@ -535,6 +535,52 @@
 							"body": "{\n  \"error\": \"<string>\"\n}"
 						}
 					]
+				},
+				{
+					"name": "get Especific User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/auth0|660140be6ea7bff45010335a",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"auth0|660140be6ea7bff45010335a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Especific User Notifications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/auth0|660140be6ea7bff45010335a",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"auth0|660140be6ea7bff45010335a"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

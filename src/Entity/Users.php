@@ -27,9 +27,13 @@ class Users
     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
+    #[ORM\OneToMany(targetEntity: Notifications::class, mappedBy: 'users')]
+    private Collection $notifications;
+
     public function __construct()
     {
         $this->Zones = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -110,6 +114,36 @@ class Users
     public function setUsername(string $username): static
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notifications>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notifications $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setUsers($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notifications $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUsers() === $this) {
+                $notification->setUsers(null);
+            }
+        }
 
         return $this;
     }
