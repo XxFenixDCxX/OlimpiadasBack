@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Notifications;
 use App\Entity\Users;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,5 +34,17 @@ class NotificationsController extends AbstractController
         }
 
         return $this->json($notificationsArray);
+    }
+    #[Route('/notification/{id}', name: 'get_especific_notifications', methods: ['GET'])]
+    public function getEspecificNotification(int $id, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $notificationRepository = $entityManager->getRepository(Notifications::class);
+        $notification = $notificationRepository->findOneBy(['id' => $id]);
+
+        if (!$notification) {
+            return new JsonResponse(['message' => 'Notificacion no encontrada'], 404);
+        }
+
+        return $this->json($notification->toArray());
     }
 }
