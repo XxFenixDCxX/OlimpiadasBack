@@ -668,7 +668,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/users/auth0|660140be6ea7bff45010335a",
+							"raw": "http://127.0.0.1:8000/notifications/auth0|660140be6ea7bff45010335a",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -678,7 +678,7 @@
 							],
 							"port": "8000",
 							"path": [
-								"users",
+								"notifications",
 								"auth0|660140be6ea7bff45010335a"
 							]
 						}
@@ -691,7 +691,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/users/auth0|660140be6ea7bff45010335a",
+							"raw": "http://127.0.0.1:8000/notification/1",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -701,10 +701,18 @@
 							],
 							"port": "8000",
 							"path": [
-								"users",
-								"auth0|660140be6ea7bff45010335a"
+								"notification",
+								"1"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark As Read Notification",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}

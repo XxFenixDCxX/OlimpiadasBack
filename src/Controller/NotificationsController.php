@@ -48,7 +48,7 @@ class NotificationsController extends AbstractController
         return $this->json($notification->toArray());
     }
 
-    #[Route('/notification/{id}/mark-as-read', name: 'mark_notification_as_read', methods: ['PUT'])]
+    #[Route('/notification/mark-as-read/{id}', name: 'mark_notification_as_read', methods: ['PUT'])]
     public function markNotificationAsRead(int $id, EntityManagerInterface $entityManager): JsonResponse
     {
         $notificationRepository = $entityManager->getRepository(Notifications::class);
@@ -57,8 +57,7 @@ class NotificationsController extends AbstractController
         if (!$notification) {
             return new JsonResponse(['message' => 'Notificación no encontrada'], 404);
         }
-
-        $notification->setRead(true);
+        $notification->setIsReaded(true);
         $entityManager->flush();
 
         return new JsonResponse(['message' => 'Notificación marcada como leída'], 200);
