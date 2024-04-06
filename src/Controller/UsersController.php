@@ -12,6 +12,19 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class UsersController extends AbstractController
 {
+    #[Route('/users/{sub}', name: 'get_especific_user', methods: ['GET'])]
+    public function getEspecific(string $sub, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $userRepository = $entityManager->getRepository(Users::class);
+        
+        $user = $userRepository->findOneBy(['sub' => $sub]);
+
+        if (!$user) {
+            return new JsonResponse(['message' => 'Usuario no encontrado'], 404);
+        }
+        return $this->json($user->toArray());
+    }
+
     #[Route('/users', name: 'get_users', methods: ['GET'])]
     public function getAll(EntityManagerInterface $entityManager): JsonResponse
     {
