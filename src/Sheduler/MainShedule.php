@@ -1,5 +1,4 @@
 <?php
-use App\Message\SendLotteryNotification;
 use Symfony\Component\Scheduler\RecurringMessage;
 use Symfony\Component\Scheduler\Schedule;
 use Symfony\Component\Scheduler\ScheduleProviderInterface;

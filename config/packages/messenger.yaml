@@ -8,11 +8,15 @@ framework:
             #default: '%env(MESSENGER_TRANSPORT_DSN)%'
             # failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
+            async: '%env(MESSENGER_TRANSPORT_DSN)%'
+            scheduler_default: 'in-memory:///'
 
 
         routing:
             # Route your messages to the transports
-            #App\Message\LogHello': default
+            #App\Message\LogHello': default        
+            'App\Message\LogHello': async
+
 
 # when@test:
 #    framework:
