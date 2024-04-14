@@ -9,23 +9,39 @@ use App\Service\LotteryService;
 use App\Service\EmailSenderService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Users;
+use App\Service\LotteryNotificationsService;;
 
 class LotteryAndNotificationController extends AbstractController
 {
     private $lotteryService;
     private $mailerService;
     private $entityManager;
-
-    public function __construct(LotteryService $lotteryService, EmailSenderService $mailerService, EntityManagerInterface $entityManager)
+    private $notificationService;
+    public function __construct(LotteryService $lotteryService, EmailSenderService $mailerService, LotteryNotificationsService $notificationService, EntityManagerInterface $entityManager)
     {
         $this->lotteryService = $lotteryService;
         $this->mailerService = $mailerService;
         $this->entityManager = $entityManager;
+        $this->notificationService = $notificationService;
     }
 
     #[Route('/lottery/and/notification', name: 'app_lottery_and_notification')]
     public function index(): JsonResponse
     {
+        $users = $this->entityManager->getRepository(Users::class)->findAll();
+        $count = 0 ; 
+        foreach ($users as $user) {
+            if ($user->isNotifiedByMail() || $user->isNotifiedByApp()) {
+                $count++;
+                break; 
+            }
+        }      
+        if ($count > 0) {
+            return $this->json([
+                'message' => 'Lottery already executed and emails already sent!'
+            ]);
+        }   
+
         try {
             $this->lotteryService->executeLottery();
 
@@ -38,6 +54,7 @@ class LotteryAndNotificationController extends AbstractController
                 $content = "Hola " . $user->getUsername() . ", ¡Felicidades! Como resultado de nuestra lotería, se te han asignado las siguientes franjas horarias para comprar las entradas: " . $timeSlot1 . " y " . $timeSlot2 . ". Si tienes alguna pregunta o necesitas cambiar tus franjas horarias, no dudes en ponerte en contacto con nosotros. Saludos, El equipo de administración";
 
                 $this->mailerService->sendEmail($user->getEmail(), $user->getUsername(), $content);
+                $this->notificationService->fillNotificationsForAllUsers();
             }
 
             return $this->json([
@@ -49,4 +66,5 @@ class LotteryAndNotificationController extends AbstractController
             ], 500);
         }
     }
+    
 }

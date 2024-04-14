@@ -30,6 +30,7 @@ class Users
     #[ORM\OneToMany(targetEntity: Notifications::class, mappedBy: 'users')]
     private Collection $notifications;
 
+
     public function __construct()
     {
         $this->Zones = new ArrayCollection();
@@ -147,4 +148,5 @@ class Users
 
         return $this;
     }
+
 }

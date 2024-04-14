@@ -5,18 +5,13 @@ framework:
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
-            #default: '%env(MESSENGER_TRANSPORT_DSN)%'
+            # async: '%env(MESSENGER_TRANSPORT_DSN)%'
             # failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
-            async: '%env(MESSENGER_TRANSPORT_DSN)%'
-            scheduler_default: 'in-memory:///'
-
 
         routing:
             # Route your messages to the transports
-            #App\Message\LogHello': default        
-            'App\Message\LogHello': async
-
+            # 'App\Message\YourMessage': async
 
 # when@test:
 #    framework:
