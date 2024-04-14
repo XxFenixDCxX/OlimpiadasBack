@@ -32,7 +32,16 @@ final class ExecuteLotteryHandler
         $currentDate = date('Y-m-d');
         $lotteryExecutedDate = '2024-03-30';
 
-        if ($currentDate >= $lotteryExecutedDate) {
+
+        $users = $this->entityManager->getRepository(Users::class)->findAll();
+        $usersWithZones = 0 ; 
+        foreach ($users as $user) {
+            if (!$user->getZone()->isEmpty()) {
+                $usersWithZones++;
+                break; 
+            }
+        }  
+        if ($currentDate == $lotteryExecutedDate || ( $currentDate > $lotteryExecutedDate  && $usersWithZones == 0)) {
         try {
                 $this->lotteryService->executeLottery();
   

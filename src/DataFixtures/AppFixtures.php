@@ -51,14 +51,6 @@ class AppFixtures extends Fixture
         $zone7->setEnd(new \DateTime('2024-06-02 24:00:00'));
         $manager->persist($zone7);
 
-        $user = new Users();
-        $user->setSub("auth0|660140be6ea7bff45010335a");
-        $user->setEmail("arkaitzcs@gmail.com");
-        $user->setUsername("arkaitzcs");
-        $user->addZone($zone0);
-        $user->addZone($zone1);
-        $manager->persist($user);
-
         $manager->flush();
     }
 }

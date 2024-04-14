@@ -6,7 +6,7 @@ use Symfony\Component\Scheduler\Attribute\AsSchedule;
 use Symfony\Component\Scheduler\RecurringMessage;
 use Symfony\Component\Scheduler\Schedule;
 use Symfony\Component\Scheduler\ScheduleProviderInterface;
-use Symfony\Component\Scheduler\Trigger\CronExpression;
+
 #[AsSchedule]
 class MainSchedule implements ScheduleProviderInterface
 {
@@ -14,7 +14,7 @@ class MainSchedule implements ScheduleProviderInterface
     {
 
         return (new Schedule())->add(
-            RecurringMessage::cron('@daily', new ExecuteLottery())
+            RecurringMessage::cron('0 0 * * *', new ExecuteLottery())
         );
 
         

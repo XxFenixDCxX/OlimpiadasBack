@@ -17,14 +17,12 @@ class LotteryNotificationsService
     public function createNotification($user, $subject, $shortText, $longMessage)
     {
         $notification = new Notifications();
-        //Users id
         $notification->setSubject($subject);
         $notification->setShortText($shortText);
         $notification->setLongMessage($longMessage);
         $notification->setIsReaded(false);
 
         $user->addNotification($notification);
-        $user->isNotifiedByApp(true);
         $this->entityManager->persist($notification);
         $this->entityManager->flush();
 
