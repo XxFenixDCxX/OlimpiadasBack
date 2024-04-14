@@ -21,8 +21,10 @@ Antes de comenzar, asegúrese de tener instalado:
 6. Ejecuta `php bin/console doctrine:database:create` para crear la base de datos.
 7. Ejecuta `php bin/console make:migration` para realizar la migracion para luego llevarla a la base de datos.
 8. Ejecuta `php bin/console doctrine:migrations:migrate` para migrar los datos a la base de datos.
+10. Si la fecha de ejecucion es mas tarde que la fecha del sorteo(30-03-2024) agrega tu usuario en el Data Foxturies o modifica la fecha de fin del sorteo en la parte del front para poderte registrar(explicado como hacer en el readme de la parte de front).
 9. Ejectua `php bin/console doctrine:fixtures:load` para cargar los datos por defecto de la base de datos.
-10. Ejecuta `symfony server:start` para iniciar el servidor.
+11. Ejecuta `php bin/console messenger:consume -v scheduler_defaultd` para cargar las zonas a los usuarios registrados si la fecha del sorteo ha pasado ya
+12. Ejecuta `symfony server:start` para iniciar el servidor.
 
 ## Funcionalidades Principales
 
