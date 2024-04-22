@@ -55,35 +55,35 @@ class AppFixtures extends Fixture
 
         //Agregados eventos por defecto
         $atletismo = new Event();
-        $atletismo->setTitle('Atletismo sector 4');
+        $atletismo->setTitle('Atletismo');
         $atletismo->setDescription('Salto y velocidad');
         $atletismo->setImage("https://olympics.com/images/static/sports/pictograms/v2/ath.svg");
         $atletismo->setDate(new \DateTime('2024-06-01 18:00:00'));
         $manager->persist($atletismo);
         
         $baloncesto = new Event();
-        $baloncesto->setTitle('Baloncesto sector 1');
+        $baloncesto->setTitle('Baloncesto');
         $baloncesto->setDescription('Estrategia y dribbling');
         $baloncesto->setImage("https://olympics.com/images/static/sports/pictograms/v2/bkb.svg");
         $baloncesto->setDate(new \DateTime('2024-06-15 16:00:00'));
         $manager->persist($baloncesto);
 
         $karate = new Event();
-        $karate->setTitle('Karate sector 1');
+        $karate->setTitle('Karate');
         $karate->setDescription('Defensa personal y combate');
         $karate->setImage("https://olympics.com/images/static/sports/pictograms/v2/kte.svg");
         $karate->setDate(new \DateTime('2024-06-28 17:00:00'));
         $manager->persist($karate);
 
         $natacion = new Event();
-        $natacion->setTitle('Natación sector 1');
+        $natacion->setTitle('Natación');
         $natacion->setDescription('Rapidez en el agua');
         $natacion->setImage("https://olympics.com/images/static/sports/pictograms/v2/swm.svg");
         $natacion->setDate(new \DateTime('2024-07-01 19:00:00'));
         $manager->persist($natacion);
 
         $futbol = new Event();
-        $futbol->setTitle('Fútbol sector 1');
+        $futbol->setTitle('Fútbol');
         $futbol->setDescription('Técnica y táctica');
         $futbol->setImage("https://olympics.com/images/static/sports/pictograms/v2/fbl.svg");
         $futbol->setDate(new \DateTime('2024-07-15 20:00:00'));
