@@ -27,7 +27,7 @@ class EventController extends AbstractController
         return $this->json($eventsArray);
     }
 
-    #[Route('/event/{id}', name: 'get_especific_event', methods: ['GET'])]
+    #[Route('/events/{id}', name: 'get_especific_event', methods: ['GET'])]
     public function getEspecific(int $id, EntityManagerInterface $entityManager): JsonResponse
     {
         $eventRepository = $entityManager->getRepository(Event::class);

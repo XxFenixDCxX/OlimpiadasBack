@@ -69,7 +69,7 @@ class AppFixtures extends Fixture
         $atletismo2->setPrice(110);
         $atletismo2->setSlots(100);
         $atletismo2->setImage("https://olympics.com/images/static/sports/pictograms/v2/ath.svg");
-        $atletismo1->setDate(new \DateTime('2024-06-01 18:00:00'));
+        $atletismo2->setDate(new \DateTime('2024-06-01 18:00:00'));
         $manager->persist($atletismo2);
 
         $atletismo3 = new Event();
@@ -78,7 +78,7 @@ class AppFixtures extends Fixture
         $atletismo3->setPrice(90);
         $atletismo3->setSlots(100);
         $atletismo3->setImage("https://olympics.com/images/static/sports/pictograms/v2/ath.svg");
-        $atletismo1->setDate(new \DateTime('2024-06-01 18:00:00'));
+        $atletismo3->setDate(new \DateTime('2024-06-01 18:00:00'));
         $manager->persist($atletismo3);
 
         $atletismo4 = new Event();
@@ -87,7 +87,7 @@ class AppFixtures extends Fixture
         $atletismo4->setPrice(70);
         $atletismo4->setSlots(100);
         $atletismo4->setImage("https://olympics.com/images/static/sports/pictograms/v2/ath.svg");
-        $atletismo1->setDate(new \DateTime('2024-06-01 18:00:00'));
+        $atletismo4->setDate(new \DateTime('2024-06-01 18:00:00'));
         $manager->persist($atletismo4);
         
         $baloncesto1 = new Event();
