@@ -20,17 +20,8 @@ class Event
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[ORM\Column]
-    private ?int $price = null;
-
-    #[ORM\Column]
-    private ?int $slots = null;
-
     #[ORM\Column(length: 255)]
     private ?string $image = null;
-
-    #[ORM\OneToOne(mappedBy: 'event', cascade: ['persist', 'remove'])]
-    private ?Purchase $purchase = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
@@ -64,30 +55,6 @@ class Event
         return $this;
     }
 
-    public function getPrice(): ?int
-    {
-        return $this->price;
-    }
-
-    public function setPrice(int $price): static
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    public function getSlots(): ?int
-    {
-        return $this->slots;
-    }
-
-    public function setSlots(int $slots): static
-    {
-        $this->slots = $slots;
-
-        return $this;
-    }
-
     public function getImage(): ?string
     {
         return $this->image;
@@ -100,30 +67,12 @@ class Event
         return $this;
     }
 
-    public function getPurchase(): ?Purchase
-    {
-        return $this->purchase;
-    }
-
-    public function setPurchase(Purchase $purchase): static
-    {
-        if ($purchase->getEvent() !== $this) {
-            $purchase->setEvent($this);
-        }
-
-        $this->purchase = $purchase;
-
-        return $this;
-    }
-
     public function toArray(): array
     {
         return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'price' => $this->price,
-            'slots' => $this->slots,
             'image' => $this->image,
             'date' => $this->date,
         ];
