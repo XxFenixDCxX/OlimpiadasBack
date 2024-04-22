@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
@@ -30,6 +31,9 @@ class Event
 
     #[ORM\OneToOne(mappedBy: 'event', cascade: ['persist', 'remove'])]
     private ?Purchase $purchase = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date = null;
 
     public function getId(): ?int
     {
@@ -103,12 +107,36 @@ class Event
 
     public function setPurchase(Purchase $purchase): static
     {
-        // set the owning side of the relation if necessary
         if ($purchase->getEvent() !== $this) {
             $purchase->setEvent($this);
         }
 
         $this->purchase = $purchase;
+
+        return $this;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'description' => $this->description,
+            'price' => $this->price,
+            'slots' => $this->slots,
+            'image' => $this->image,
+            'date' => $this->date,
+        ];
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): static
+    {
+        $this->date = $date;
 
         return $this;
     }
