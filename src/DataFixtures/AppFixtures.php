@@ -140,6 +140,7 @@ class AppFixtures extends Fixture
         $section3->setSlots(100);
         $section3->setPrice(60);
         $section3->setEvent($karate);
+        $manager->persist($section3);
 
         $section4 = new Section();
         $section4->setSlots(100);
