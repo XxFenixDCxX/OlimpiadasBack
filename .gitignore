@@ -8,3 +8,6 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+src/.DS_Store
+migrations/Version20240422104932.php
+migrations/Version20240422113353.php
