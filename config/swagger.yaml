@@ -1,0 +1,694 @@
+openapi: 3.0.0
+servers:
+  - description: Olimpiadas api
+    url: https://virtserver.swaggerhub.com/arkaitzcs/Olimpiadas/1.0.0
+info:
+  version: "1.0.0"
+  title: Olimpiadas
+  description: API para las olimpiadas
+paths:
+  /users:
+    get:
+      tags:
+        - Users
+      description: Devuelve todos los usuarios registrados
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: Todos los usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Identificador del usuario
+                      example: 1
+                    sub:
+                      type: string
+                      description: Identificador del usuario en Auth0
+                      example: auth0|660140be6ea7bff45010335a
+                    email:
+                      type: string
+                      description: Email del usuario
+                      example: arkaitzcs@gmail.com
+                    username:
+                      type: string
+                      description: Nombre de usuario
+                      example: arkaitzcs
+                    zones:
+                      type: array
+                      description: Zonas del usuario, puede ser null
+                      items:
+                        type: object
+                        properties:
+                          zone1:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                description: Identificador de la zona
+                                example: 1
+                              start:
+                                type: string
+                                format: date
+                                description: Fecha de inicio del periodo de compra
+                                example: 2021-04-01
+                              end:
+                                type: string
+                                format: date
+                                description: Fecha de fin del periodo de compra
+                                example: 2021-04-07
+                          zone8:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                description: Identificador de la zona
+                                example: 8
+                              start:
+                                type: string
+                                format: date
+                                description: Fecha de inicio del periodo de compra
+                                example: 2021-05-27
+                              end:
+                                type: string
+                                format: date
+                                description: Fecha de fin del periodo de compra
+                                example: 2021-06-02
+        '400':
+          description: Error no hay usuarios
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string                  
+                    description: Mensaje de error
+                    example: No hay usuarios
+    post:
+      tags:
+        - Users
+      operationId: create
+      description: Crear el usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sub:
+                  type: string
+                  description: Id de la base de datos de Auth0
+                  example: auth0|660140be6ea7bff45010335a
+                email:
+                  type: string
+                  description: Correo de usuario
+                  example: arkaitzcs@gmail.com
+                username:
+                  type: string
+                  description: Nombre de usuario
+                  example: arkaitzcs
+      responses:
+        '201':
+          description: Creado usuario correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de confirmación
+                    example: Usuario creado correctamente
+        '400':
+          description: Error faltan campos o ya existe
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error
+                    example: El campo sub es requerido y no puede estar vacío / El usuario ya existe
+        '500':
+          description: Error al crear usuario
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error
+                    example: Error al crear el usuario
+  '/users/{sub}':
+    get:
+      tags:
+        - Users
+      operationId: getEspecificUser
+      description: Recibe un usuario especifico buscado por el id del auth0
+      parameters: 
+        - name: sub
+          in: path
+          description: Id de usuario auth
+          required: true
+          schema:
+            type: string
+            example: auth0|660140be6ea7bff45010335a
+      responses:
+        '200':
+          description: Usuario recibido correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Identificador del usuario
+                      example: 1
+                    sub:
+                      type: string
+                      description: Identificador del usuario en Auth0
+                      example: auth0|660140be6ea7bff45010335a
+                    email:
+                      type: string
+                      description: Email del usuario
+                      example: arkaitzcs@gmail.com
+                    username:
+                      type: string
+                      description: Nombre de usuario
+                      example: arkaitzcs
+                    zones:
+                      type: array
+                      description: Zonas del usuario, puede ser null
+                      items:
+                        type: object
+                        properties:
+                          zone1:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                description: Identificador de la zona
+                                example: 1
+                              start:
+                                type: string
+                                format: date
+                                description: Fecha de inicio del periodo de compra
+                                example: 2021-04-01
+                              end:
+                                type: string
+                                format: date
+                                description: Fecha de fin del periodo de compra
+                                example: 2021-04-07
+                          zone8:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                description: Identificador de la zona
+                                example: 8
+                              start:
+                                type: string
+                                format: date
+                                description: Fecha de inicio del periodo de compra
+                                example: 2021-05-27
+                              end:
+                                type: string
+                                format: date
+                                description: Fecha de fin del periodo de compra
+                                example: 2021-06-02
+        '404':
+          description: Usuario no encontrado
+          content:
+            aplication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error de usuario no encontrado
+                    example: Usuario no encontrado
+        
+    put:
+      tags: 
+        - Users
+      operationId: updateZones
+      description: Actualizar las zonas de los usuarios
+      parameters: 
+        - name: sub
+          in: path
+          description: Id de usuario de auth0
+          required: true
+          schema:
+            type: string
+            example: auth0|660140be6ea7bff45010335a
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                zones:
+                  type: array
+                  description: Lista de IDs de zonas a actualizar
+                  items:
+                    type: integer
+                    example: 1
+              required:
+                - zones
+      responses:
+        '200':
+          description: Zonas actualizadas correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de confirmación
+                    example: Zonas actualizadas correctamente para el usuario.
+        '400':
+          description: Campos requeridos
+          content:
+            aplication/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error de campos requeridos
+                    example: Las zonas son requeridas.
+        '404':
+          description: Usuario no encontrado
+          content:
+            aplication/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error de usuario no encontrado
+                    example: Usuario no encontrado.
+        '500':
+          description: Error al actualizar
+          content:
+            aplication/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error al actualizar las zonas del usuario
+                    example: Error al actualizar las zonas del usuario.
+  /zones:
+    get:
+      tags: 
+        - Zones
+      description: Recibe todas las zonas
+      operationId: getAllZones
+      responses:
+        '200':
+          description: Recibe todas las zonas
+          content:
+            aplication/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: ID de la zona
+                      example: 1
+                    start:
+                      type: string
+                      format: date-time
+                      description: Fecha de inicio de periodo de compra
+                      example: 2021-04-01 24:00:00
+                    end:
+                      type: string
+                      format: date
+                      description: Fecha de fin de periodo de compra
+                      example: 2021-04-7
+        '404':
+          description: Error no hay zonas
+          content:
+            aplication/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error
+                    example: No hay zonas
+  '/notifications/{sub}':
+    get:
+      tags:
+        - Notifications
+      operationId: getEspecificUserNotifications
+      description: Recibe un id de usuario auth0 y devuelve sus notificaciones
+      parameters: 
+        - name: sub
+          in: path
+          description: Id de usuario auth
+          required: true
+          schema:
+            type: string
+            example: auth0|660140be6ea7bff45010335a
+      responses:
+        '200':
+          description: Usuario recibido correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Identificador de la notificacion
+                      example: 1
+                    subject:
+                      type: string
+                      description: Asunto de la notificacion
+                      example: Sorteo
+                    short_text:
+                      type: string
+                      description: Texto corto de la notificacion
+                      example: Finalizado Sorteo
+                    long_message:
+                      type: string
+                      description: Mensaje largo de la notificacion
+                      example: El sorteo ha finalizado pronto recibiras un mensaje con la informacion al respecto del resultado
+                    isReaded:
+                      type: boolean
+                      description: Si lo ha leido el usuario
+        '404':
+          description: Usuario no encontrado
+          content:
+            aplication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error de usuario no encontrado
+                    example: Usuario no encontrado
+        '500':
+          description: No hay notificaciones
+          content:
+            aplication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error de que no hay notificaciones
+                    example: Usuario no encontrado
+  '/notification/{id}':
+    get:
+      tags:
+        - Notifications
+      operationId: getEspecificNotification
+      description: Recibe un id de notificacion
+      parameters: 
+        - name: id
+          in: path
+          description: Id de Notificacion
+          required: true
+          schema:
+            type: number
+            example: 1
+      responses:
+        '200':
+          description: Notificacion recibida correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Identificador de la notificacion
+                      example: 1
+                    subject:
+                      type: string
+                      description: Asunto de la notificacion
+                      example: Sorteo
+                    short_text:
+                      type: string
+                      description: Texto corto de la notificacion
+                      example: Finalizado Sorteo
+                    long_message:
+                      type: string
+                      description: Mensaje largo de la notificacion
+                      example: El sorteo ha finalizado pronto recibiras un mensaje con la informacion al respecto del resultado
+                    isReaded:
+                      type: boolean
+                      description: Si lo ha leido el usuario
+        '404':
+          description: Notificacion no encontrada
+          content:
+            aplication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error de usuario no encontrado
+                    example: Notificacion no encontrada
+  '/notification/mark-as-read/{id}':
+    put:
+      tags:
+        - Notifications
+      operationId: markAsReadNotification
+      description: Recibe un id de notificacion
+      parameters: 
+        - name: id
+          in: path
+          description: Id de Notificacion
+          required: true
+          schema:
+            type: number
+            example: 1
+      responses:
+        '200':
+          description: Notificacion recibida correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de marcado como leido correctamente
+                    example: Notificación marcada como leída
+        '404':
+          description: Notificacion no encontrada
+          content:
+            aplication/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error de usuario no encontrado
+                    example: Notificacion no encontrada
+  /events:
+    get:
+      tags:
+        - Events
+      description: Devuelve todos los eventos registrados
+      operationId: getAllEvents
+      responses:
+        '200':
+          description: Todos los eventos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Identificador del evento
+                      example: 1
+                    title:
+                      type: string
+                      description: Titulo del evento
+                      example: Atletismo seccion 1
+                    description:
+                      type: string
+                      description: Descripcion del evento
+                      example: Atletismo es un deporte
+                    price:
+                      type: integer
+                      description: El precio del evento
+                      example: 10
+                    slots:
+                      type: integer
+                      description: Numero de huecos disponibles
+                      example: 4294967295
+                    image:
+                      type: string
+                      description: Imagen de el evento
+                      example: https://olympics.com/images/static/sports/pictograms/v2/ath.svg
+        '400':
+          description: Error no hay eventos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string                  
+                    description: Mensaje de error
+                    example: No hay eventos
+  /event/{id}:
+    get:
+      tags:
+        - Events
+      description: Devuelve un evento especifico
+      operationId: getEspecificEvents
+      parameters: 
+        - name: id
+          in: path
+          description: Id del Evento
+          required: true
+          schema:
+            type: number
+            example: 1
+      responses:
+        '200':
+          description: Evento specifico
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Identificador del evento
+                    example: 1
+                  title:
+                    type: string
+                    description: Titulo del evento
+                    example: Atletismo seccion 1
+                  description:
+                    type: string
+                    description: Descripcion del evento
+                    example: Atletismo es un deporte
+                  slots:
+                    type: integer
+                    description: Numero de huecos disponibles
+                    example: 4294967295
+                  image:
+                    type: string
+                    description: Imagen de el evento
+                    example: https://olympics.com/images/static/sports/pictograms/v2/ath.svg
+        '400':
+          description: Error no existe el evento
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string                  
+                    description: Mensaje de error
+                    example: No existe el evento
+  /purchases:
+    post:
+      tags:
+        - Purchases
+      operationId: makePurchase
+      description: Realiza la compra
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                events:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      event1:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: ID del evento que va a comprar
+                            example: 1
+                          slots:
+                            type: integer
+                            description: Numero de sitios que va a comprar
+                            example: 3
+                      event2:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: Id del evento que va a comprar
+                            example: 2
+                          slots:
+                            type: integer
+                            description: Numero de sitios que va a comprar
+                            example: 1
+                userId:
+                  type: string
+                  description: Id del usuario que compra
+                  example: auth0|660140be6ea7bff45010335a
+      responses:
+        '201':
+          description: Realizada compra correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de confirmación
+                    example: Compra realizada correctamente
+        '400':
+          description: Error faltan campos o ya existe
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error
+                    example: Es necesario pasar los eventos y el campo sub es requerido / El usuario ya existe
+        '500':
+          description: Error al realizar la compra
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error
+                    example: Error al crear el usuario
