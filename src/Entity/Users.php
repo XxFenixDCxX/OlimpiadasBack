@@ -32,6 +32,9 @@ class Users
     #[ORM\OneToMany(targetEntity: Notifications::class, mappedBy: 'users')]
     private Collection $notifications;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?PurchaseHistory $purchaseHistory = null;
+
 
     public function __construct()
     {
@@ -147,6 +150,18 @@ class Users
                 $notification->setUsers(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPurchaseHistory(): ?PurchaseHistory
+    {
+        return $this->purchaseHistory;
+    }
+
+    public function setPurchaseHistory(?PurchaseHistory $purchaseHistory): static
+    {
+        $this->purchaseHistory = $purchaseHistory;
 
         return $this;
     }

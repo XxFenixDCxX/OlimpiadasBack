@@ -34,6 +34,9 @@ class Event
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'event')]
     private Collection $sections;
 
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    private ?PurchaseHistory $purchaseHistory = null;
+
     public function __construct()
     {
         $this->sections = new ArrayCollection();
@@ -129,6 +132,18 @@ class Event
                 $section->setEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPurchaseHistory(): ?PurchaseHistory
+    {
+        return $this->purchaseHistory;
+    }
+
+    public function setPurchaseHistory(?PurchaseHistory $purchaseHistory): static
+    {
+        $this->purchaseHistory = $purchaseHistory;
 
         return $this;
     }
