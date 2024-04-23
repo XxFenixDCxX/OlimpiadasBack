@@ -11,3 +11,7 @@
 src/.DS_Store
 migrations/Version20240422104932.php
 migrations/Version20240422113353.php
+migrations/Version20240423084541.php
+migrations/Version20240423084924.php
+migrations/Version20240423090522.php
+migrations/Version20240423101512.php

@@ -32,14 +32,18 @@ class Users
     #[ORM\OneToMany(targetEntity: Notifications::class, mappedBy: 'users')]
     private Collection $notifications;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?PurchaseHistory $purchaseHistory = null;
+    /**
+     * @var Collection<int, PurchasesHistory>
+     */
+    #[ORM\OneToMany(targetEntity: PurchasesHistory::class, mappedBy: 'userId')]
+    private Collection $purchasesHistories;
 
 
     public function __construct()
     {
         $this->Zones = new ArrayCollection();
         $this->notifications = new ArrayCollection();
+        $this->purchasesHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -154,14 +158,32 @@ class Users
         return $this;
     }
 
-    public function getPurchaseHistory(): ?PurchaseHistory
+    /**
+     * @return Collection<int, PurchasesHistory>
+     */
+    public function getPurchasesHistories(): Collection
     {
-        return $this->purchaseHistory;
+        return $this->purchasesHistories;
     }
 
-    public function setPurchaseHistory(?PurchaseHistory $purchaseHistory): static
+    public function addPurchasesHistory(PurchasesHistory $purchasesHistory): static
     {
-        $this->purchaseHistory = $purchaseHistory;
+        if (!$this->purchasesHistories->contains($purchasesHistory)) {
+            $this->purchasesHistories->add($purchasesHistory);
+            $purchasesHistory->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePurchasesHistory(PurchasesHistory $purchasesHistory): static
+    {
+        if ($this->purchasesHistories->removeElement($purchasesHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($purchasesHistory->getUser() === $this) {
+                $purchasesHistory->setUser(null);
+            }
+        }
 
         return $this;
     }

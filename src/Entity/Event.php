@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -14,28 +15,31 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['event'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['event'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['event'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['event'])]
     private ?string $image = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['event'])]
     private ?\DateTimeInterface $date = null;
 
     /**
      * @var Collection<int, Section>
      */
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'event')]
+    #[Groups(['event'])]
     private Collection $sections;
-
-    #[ORM\ManyToOne(inversedBy: 'events')]
-    private ?PurchaseHistory $purchaseHistory = null;
 
     public function __construct()
     {
@@ -132,18 +136,6 @@ class Event
                 $section->setEvent(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getPurchaseHistory(): ?PurchaseHistory
-    {
-        return $this->purchaseHistory;
-    }
-
-    public function setPurchaseHistory(?PurchaseHistory $purchaseHistory): static
-    {
-        $this->purchaseHistory = $purchaseHistory;
 
         return $this;
     }
