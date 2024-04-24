@@ -13,11 +13,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use App\Service\EmailSenderService;
 class PurchasesController extends AbstractController
 {
+
     #[Route('/purchases', name: 'app_purchases', methods: ['POST'])]
-    public function index(Request $request, EntityManagerInterface $entityManager): Response
+    public function index(Request $request, EntityManagerInterface $entityManager,EmailSenderService $mailerService): Response
     {
         $content = $request->getContent();
         $requestData = json_decode($content, true);
@@ -34,12 +35,14 @@ class PurchasesController extends AbstractController
         if($user === null)
             return $this->json(['error' => 'No se ha encontrado el usuario'], 404);
 
-        $emailTo = $user->getEmail();
-        $nameTo = $user->getUsername();
+
 
         $transaction = new Transactions();
         $transaction->setUserId($userId);
         $entityManager->persist($transaction);
+
+        $totalPrice = 0;
+        $products = [];
 
         foreach ($sections as $section) {
             foreach ($section as $sectionDetails) {
@@ -63,7 +66,29 @@ class PurchasesController extends AbstractController
                 $purchaseHistory->setTransaction($transaction);
                 $entityManager->persist($purchaseHistory);
             }
+
+            $totalPrice += $section->getPrice() * $slots;
+            $products[] = [
+                'name' => 'Descripcion al hacer el PULL',
+                'price' => $section->getPrice(),
+                'quantity' => $slots,
+                'section' => $section->getId()
+            ];
         }
+
+        var_dump($products);
+        return 0; 
+        $subject = "Confirmación de compra";
+        $templateId = 'x2p0347xk69gzdrn';
+        $mailerService->sendEmailPurchase(
+            $user->getEmail(),
+            $user->getUsername(),
+            $totalPrice,
+            $transaction->getId(), 
+            $subject,
+            $templateId,
+            $products
+        );
 
         $entityManager->flush();
         return $this->json(['message' => 'Compra realizada correctamente']);

@@ -52,7 +52,9 @@ final class ExecuteLotteryHandler
                     $timeSlot1 = $zones[0]->getStart()->format('Y-m-d') . ' - ' . $zones[0]->getEnd()->format('Y-m-d');
                     $timeSlot2 = $zones[1]->getStart()->format('Y-m-d') . ' - ' . $zones[1]->getEnd()->format('Y-m-d');
                     $content = "Hola " . $user->getUsername() . ", ¡Felicidades! Como resultado de nuestra lotería, se te han asignado las siguientes franjas horarias para comprar las entradas: " . $timeSlot1 . " y " . $timeSlot2 . ". Si tienes alguna pregunta o necesitas cambiar tus franjas horarias, no dudes en ponerte en contacto con nosotros. Saludos, El equipo de administración";
-                    $this->mailerService->sendEmail($user->getEmail(), $user->getUsername(), $content);
+                    $subject = "Resultado de la Lotería Olympics Paris";
+                    $templateId = 'jpzkmgqzj2yg059v';
+                    $this->mailerService->sendEmail($user->getEmail(), $user->getUsername(), $content,$subject,$templateId);
                     $this->notificationService->fillNotificationsForAllUsers();
                 }
   
