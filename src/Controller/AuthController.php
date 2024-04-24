@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Users;
 use Doctrine\ORM\EntityManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,10 +12,7 @@ class AuthController extends AbstractController
 {
     private $jwtManager;
 
-    public function __construct(JWTTokenManagerInterface $jwtManager)
-    {
-        $this->jwtManager = $jwtManager;
-    }
+    public function __construct(){}
 
     public function authenticate(Request $request, EntityManagerInterface $entityManager): Response
     {

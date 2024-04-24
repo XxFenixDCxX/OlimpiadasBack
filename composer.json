@@ -19,7 +19,6 @@
         "endroid/qr-code": "^5.0",
         "guzzlehttp/guzzle": "^7.8",
         "lcobucci/jwt": "*",
-        "lexik/jwt-authentication-bundle": "*",
         "mailersend/mailersend": "^0.23.0",
         "nelmio/cors-bundle": "^2.4",
         "nyholm/psr7": "^1.8",
