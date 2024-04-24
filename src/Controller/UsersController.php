@@ -7,14 +7,32 @@ use App\Entity\Zones;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Controller\AuthController;
+use App\Service\AuthService;
 
 class UsersController extends AbstractController
 {
-    #[Route('/users/{sub}', name: 'get_especific_user', methods: ['GET'])]
-    public function getEspecific(string $sub, EntityManagerInterface $entityManager): JsonResponse
+    private $authController;
+    private $authService;
+
+    public function __construct(AuthController $authController, AuthService $authService)
     {
+        $this->authController = $authController;
+        $this->authService = $authService;
+    }
+    
+    #[Route('/users/{sub}', name: 'get_especific_user', methods: ['GET'])]
+    public function getEspecific(string $sub, EntityManagerInterface $entityManager, Request $request): JsonResponse
+    {
+        $authResponse = $this->authController->authenticate($request);
+
+        if ($authResponse->getStatusCode() != Response::HTTP_OK) {
+            return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
+        }
+
         $userRepository = $entityManager->getRepository(Users::class);
         
         $user = $userRepository->findOneBy(['sub' => $sub]);
@@ -26,8 +44,14 @@ class UsersController extends AbstractController
     }
 
     #[Route('/users', name: 'get_users', methods: ['GET'])]
-    public function getAll(EntityManagerInterface $entityManager): JsonResponse
+    public function getAll(EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
+        $authResponse = $this->authController->authenticate($request);
+
+        if ($authResponse->getStatusCode() != Response::HTTP_OK) {
+            return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
+        }
+
         $usersRepository = $entityManager->getRepository(Users::class);
         $users = $usersRepository->findAll();
 
@@ -45,6 +69,12 @@ class UsersController extends AbstractController
     #[Route('/users', name: 'create_users', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
+        $authResponse = $this->authController->authenticate($request);
+
+        if ($authResponse->getStatusCode() != Response::HTTP_OK) {
+            return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
+        }
+
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data['sub']) || empty($data['sub']) || !isset($data['email']) || empty($data['email']) || !isset($data['username']) || empty($data['username'])) {
@@ -76,6 +106,12 @@ class UsersController extends AbstractController
     #[Route('/users/{sub}', name: 'update_users_zones', methods: ['PUT'])]
     public function update(string $sub, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
+        $authResponse = $this->authController->authenticate($request);
+
+        if ($authResponse->getStatusCode() != Response::HTTP_OK) {
+            return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
+        }
+
         $user = $entityManager->getRepository(Users::class)->findOneBy(['sub' => $sub]);
 
         if (!$user) {
@@ -105,7 +141,4 @@ class UsersController extends AbstractController
             return $this->json(['error' => 'Error al actualizar las zonas del usuario.'], 500);
         }
     }
-
-
-    
 }
