@@ -25,12 +25,6 @@ class UsersController extends AbstractController
     #[Route('/users/{sub}', name: 'get_especific_user', methods: ['GET'])]
     public function getEspecific(string $sub, EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
-        $authResponse = $this->authController->authenticate($request, $entityManager);
-
-        if ($authResponse->getStatusCode() != Response::HTTP_OK) {
-            return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
-        }
-
         $userRepository = $entityManager->getRepository(Users::class);
         
         $user = $userRepository->findOneBy(['sub' => $sub]);
@@ -67,12 +61,6 @@ class UsersController extends AbstractController
     #[Route('/users', name: 'create_users', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        $authResponse = $this->authController->authenticate($request, $entityManager);
-
-        if ($authResponse->getStatusCode() != Response::HTTP_OK) {
-            return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
-        }
-
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data['sub']) || empty($data['sub']) || !isset($data['email']) || empty($data['email']) || !isset($data['username']) || empty($data['username'])) {
