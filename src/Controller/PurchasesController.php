@@ -36,6 +36,7 @@ class PurchasesController extends AbstractController
 
         $emailTo = $user->getEmail();
         $nameTo = $user->getUsername();
+        $textEmail = 'Compra realizada correctamente\n se han comprado los siguientes productos\n';
 
         $transaction = new Transactions();
         $transaction->setUserId($userId);
@@ -62,10 +63,14 @@ class PurchasesController extends AbstractController
                 $purchaseHistory->setDate(new \DateTime('now', new \DateTimeZone('Europe/Madrid')));
                 $purchaseHistory->setTransaction($transaction);
                 $entityManager->persist($purchaseHistory);
+                $eventId = $section->getEvent()->getId();
+                $eventRepository = $entityManager->getRepository(Event::class);
+                $event = $eventRepository->findOneBy(['id' => $eventId]);
+                $textEmail .= 'Se han comprado ' . $slots . ' voletos en la ' . $section->getDescription() . ' del evento '. $event->getTitle() .'\n';
             }
         }
 
         $entityManager->flush();
-        return $this->json(['message' => 'Compra realizada correctamente']);
+        return $this->json(['message' => 'Compra realizada correctamente'], 200);
     }
 }
