@@ -29,6 +29,14 @@ class PurchasesController extends AbstractController
         $sections = $requestData['sections'];
         $userId = (string)$requestData['userId'];
 
+        $usersRepository = $entityManager->getRepository(Users::class);
+        $user = $usersRepository->findOneBy(['sub' => $userId]);
+        if($user === null)
+            return $this->json(['error' => 'No se ha encontrado el usuario'], 404);
+
+        $emailTo = $user->getEmail();
+        $nameTo = $user->getUsername();
+
         $transaction = new Transactions();
         $transaction->setUserId($userId);
         $entityManager->persist($transaction);
@@ -47,21 +55,17 @@ class PurchasesController extends AbstractController
                 $sectionSlots = $section->getSlots() - $slots;
                 $section->setSlots($sectionSlots);
                 $entityManager->persist($section);
-                $usersRepository = $entityManager->getRepository(Users::class);
-                $user = $usersRepository->findOneBy(['sub' => $userId]);
-                if($user === null)
-                    return $this->json(['error' => 'No se ha encontrado el usuario'], 404);
                 $purchaseHistory = new PurchasesHistory();
                 $purchaseHistory->setUser($user);
                 $purchaseHistory->setSection($section);
                 $purchaseHistory->setSlots($slots);
-                $purchaseHistory->setDate(new \DateTime());
+                $purchaseHistory->setDate(new \DateTime('now', new \DateTimeZone('Europe/Madrid')));
                 $purchaseHistory->setTransaction($transaction);
                 $entityManager->persist($purchaseHistory);
             }
         }
 
         $entityManager->flush();
-        return $this->json(['message', 'Compra realizada correctamente']);
+        return $this->json(['message' => 'Compra realizada correctamente']);
     }
 }
