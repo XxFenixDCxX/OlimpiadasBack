@@ -63,24 +63,28 @@ class AppFixtures extends Fixture
         $manager->persist($atletismo);
         
         $section1 = new Section();
+        $section1->setDescription('Sección 1');
         $section1->setSlots(100);
         $section1->setPrice(150);
         $section1->setEvent($atletismo);
         $manager->persist($section1);
 
         $section2 = new Section();
+        $section2->setDescription('Sección 2');
         $section2->setSlots(100);
         $section2->setPrice(120);
         $section2->setEvent($atletismo);
         $manager->persist($section2);
 
         $section3 = new Section();
+        $section3->setDescription('Sección 3');
         $section3->setSlots(100);
         $section3->setPrice(110);
         $section3->setEvent($atletismo);
         $manager->persist($section3);
 
         $section4 = new Section();
+        $section4->setDescription('Sección 4');
         $section4->setSlots(100);
         $section4->setPrice(100);
         $section4->setEvent($atletismo);
@@ -94,24 +98,28 @@ class AppFixtures extends Fixture
         $manager->persist($baloncesto);
 
         $section1 = new Section();
+        $section1->setDescription('Sección 1');
         $section1->setSlots(100);
         $section1->setPrice(100);
         $section1->setEvent($baloncesto);
         $manager->persist($section1);
 
         $section2 = new Section();
+        $section2->setDescription('Sección 2');
         $section2->setSlots(100);
         $section2->setPrice(90);
         $section2->setEvent($baloncesto);
         $manager->persist($section2);
 
         $section3 = new Section();
+        $section3->setDescription('Sección 3');
         $section3->setSlots(100);
         $section3->setPrice(80);
         $section3->setEvent($baloncesto);
         $manager->persist($section3);
 
         $section4 = new Section();
+        $section4->setDescription('Sección 4');
         $section4->setSlots(100);
         $section4->setPrice(70);
         $section4->setEvent($baloncesto);
@@ -125,24 +133,28 @@ class AppFixtures extends Fixture
         $manager->persist($karate);
 
         $section1 = new Section();
+        $section1->setDescription('Sección 1');
         $section1->setSlots(100);
         $section1->setPrice(80);
         $section1->setEvent($karate);
         $manager->persist($section1);
 
         $section2 = new Section();
+        $section2->setDescription('Sección 2');
         $section2->setSlots(100);
         $section2->setPrice(70);
         $section2->setEvent($karate);
         $manager->persist($section2);
 
         $section3 = new Section();
+        $section3->setDescription('Sección 3');
         $section3->setSlots(100);
         $section3->setPrice(60);
         $section3->setEvent($karate);
         $manager->persist($section3);
 
         $section4 = new Section();
+        $section4->setDescription('Sección 4');
         $section4->setSlots(100);
         $section4->setPrice(50);
         $section4->setEvent($karate);
@@ -156,24 +168,28 @@ class AppFixtures extends Fixture
         $manager->persist($natacion);
 
         $section1 = new Section();
+        $section1->setDescription('Sección 1');
         $section1->setSlots(100);
         $section1->setPrice(50);
         $section1->setEvent($natacion);
         $manager->persist($section1);
 
         $section2 = new Section();
+        $section2->setDescription('Sección 2');
         $section2->setSlots(100);
         $section2->setPrice(40);
         $section2->setEvent($natacion);
         $manager->persist($section2);
 
         $section3 = new Section();
+        $section3->setDescription('Sección 3');
         $section3->setSlots(100);
         $section3->setPrice(30);
         $section3->setEvent($natacion);
         $manager->persist($section3);
 
         $section4 = new Section();
+        $section4->setDescription('Sección 4');
         $section4->setSlots(100);
         $section4->setPrice(20);
         $section4->setEvent($natacion);
@@ -187,24 +203,28 @@ class AppFixtures extends Fixture
         $manager->persist($futbol);
 
         $section1 = new Section();
+        $section1->setDescription('Sección 1');
         $section1->setSlots(100);
         $section1->setPrice(200);
         $section1->setEvent($futbol);
         $manager->persist($section1);
 
         $section2 = new Section();
+        $section2->setDescription('Sección 2');
         $section2->setSlots(100);
         $section2->setPrice(180);
         $section2->setEvent($futbol);
         $manager->persist($section2);
 
         $section3 = new Section();
+        $section3->setDescription('Sección 3');
         $section3->setSlots(100);
         $section3->setPrice(160);
         $section3->setEvent($futbol);
         $manager->persist($section3);
 
         $section4 = new Section();
+        $section4->setDescription('Sección 4');
         $section4->setSlots(100);
         $section4->setPrice(140);
         $section4->setEvent($futbol);

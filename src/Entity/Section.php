@@ -32,6 +32,9 @@ class Section
     #[ORM\OneToMany(targetEntity: PurchasesHistory::class, mappedBy: 'section')]
     private Collection $purchasesHistories;
 
+    #[ORM\Column(length: 255)]
+    private ?string $description = null;
+
     public function __construct()
     {
         $this->purchasesHistories = new ArrayCollection();
@@ -85,6 +88,7 @@ class Section
     {
         return [
             'id' => $this->id,
+            'description' => $this->description,
             'slots' => $this->slots,
             'price' => $this->price,
         ];
@@ -116,6 +120,18 @@ class Section
                 $purchasesHistory->setSection(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }

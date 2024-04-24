@@ -15,30 +15,24 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['event'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['event'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['event'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['event'])]
     private ?string $image = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['event'])]
     private ?\DateTimeInterface $date = null;
 
     /**
      * @var Collection<int, Section>
      */
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'event')]
-    #[Groups(['event'])]
     private Collection $sections;
 
     public function __construct()
