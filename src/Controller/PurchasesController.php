@@ -101,8 +101,6 @@ class PurchasesController extends AbstractController
             ];
         }
 
-        var_dump($products);
-        return 0; 
         $subject = "Confirmación de compra";
         $templateId = 'x2p0347xk69gzdrn';
         $mailerService->sendEmailPurchase(
