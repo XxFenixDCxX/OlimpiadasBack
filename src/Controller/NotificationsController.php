@@ -8,12 +8,31 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Service\AuthService;
+use App\Controller\AuthController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class NotificationsController extends AbstractController
 {
-    #[Route('/notifications/{sub}', name: 'get_especific_user_notifications', methods: ['GET'])]
-    public function getEspecificUserNotification(string $sub, EntityManagerInterface $entityManager): JsonResponse
+    private $authController;
+    private $authService;
+
+    public function __construct(AuthController $authController, AuthService $authService)
     {
+        $this->authController = $authController;
+        $this->authService = $authService;
+    }
+    
+    #[Route('/notifications/{sub}', name: 'get_especific_user_notifications', methods: ['GET'])]
+    public function getEspecificUserNotification(string $sub, EntityManagerInterface $entityManager, Request $request): JsonResponse
+    {
+        $authResponse = $this->authController->authenticate($request);
+
+        if ($authResponse->getStatusCode() != Response::HTTP_OK) {
+            return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
+        }
+
         $userRepository = $entityManager->getRepository(Users::class);
         $user = $userRepository->findOneBy(['sub' => $sub]);
 
@@ -26,18 +45,23 @@ class NotificationsController extends AbstractController
             return new JsonResponse(['message' => 'No hay notificaciones'], 500);
         }
 
-
         $notificationsArray = [];
-
         foreach ($notifications as $notification) {
             $notificationsArray[] = $notification->toArray();
         }
 
         return $this->json($notificationsArray);
     }
+
     #[Route('/notification/{id}', name: 'get_especific_notifications', methods: ['GET'])]
-    public function getEspecificNotification(int $id, EntityManagerInterface $entityManager): JsonResponse
+    public function getEspecificNotification(int $id, EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
+        $authResponse = $this->authController->authenticate($request);
+
+        if ($authResponse->getStatusCode() != Response::HTTP_OK) {
+            return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
+        }
+
         $notificationRepository = $entityManager->getRepository(Notifications::class);
         $notification = $notificationRepository->findOneBy(['id' => $id]);
 
@@ -49,8 +73,14 @@ class NotificationsController extends AbstractController
     }
 
     #[Route('/notification/mark-as-read/{id}', name: 'mark_notification_as_read', methods: ['PUT'])]
-    public function markNotificationAsRead(int $id, EntityManagerInterface $entityManager): JsonResponse
+    public function markNotificationAsRead(int $id, EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
+        $authResponse = $this->authController->authenticate($request);
+
+        if ($authResponse->getStatusCode() != Response::HTTP_OK) {
+            return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
+        }
+
         $notificationRepository = $entityManager->getRepository(Notifications::class);
         $notification = $notificationRepository->find($id);
 
