@@ -2,23 +2,39 @@
 
 namespace App\Controller;
 
-use App\Entity\Event;
 use App\Entity\PurchasesHistory;
 use App\Entity\Section;
 use App\Entity\Transactions;
 use App\Entity\Users;
 use Doctrine\ORM\EntityManagerInterface;
-use MailerSend\Endpoints\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\AuthService;
+use App\Controller\AuthController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PurchasesController extends AbstractController
 {
+    private $authController;
+    private $authService;
+
+    public function __construct(AuthController $authController, AuthService $authService)
+    {
+        $this->authController = $authController;
+        $this->authService = $authService;
+    }
+
     #[Route('/purchases', name: 'app_purchases', methods: ['POST'])]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $authResponse = $this->authController->authenticate($request);
+
+        if ($authResponse->getStatusCode() != Response::HTTP_OK) {
+            return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
+        }
+
         $content = $request->getContent();
         $requestData = json_decode($content, true);
 
