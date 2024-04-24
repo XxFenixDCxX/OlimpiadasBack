@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -33,9 +34,6 @@ class Event
      */
     #[ORM\OneToMany(targetEntity: Section::class, mappedBy: 'event')]
     private Collection $sections;
-
-    #[ORM\ManyToOne(inversedBy: 'events')]
-    private ?PurchaseHistory $purchaseHistory = null;
 
     public function __construct()
     {
@@ -132,18 +130,6 @@ class Event
                 $section->setEvent(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getPurchaseHistory(): ?PurchaseHistory
-    {
-        return $this->purchaseHistory;
-    }
-
-    public function setPurchaseHistory(?PurchaseHistory $purchaseHistory): static
-    {
-        $this->purchaseHistory = $purchaseHistory;
 
         return $this;
     }
