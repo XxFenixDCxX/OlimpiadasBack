@@ -16,18 +16,16 @@ use Symfony\Component\HttpFoundation\Response;
 class NotificationsController extends AbstractController
 {
     private $authController;
-    private $authService;
 
-    public function __construct(AuthController $authController, AuthService $authService)
+    public function __construct(AuthController $authController)
     {
         $this->authController = $authController;
-        $this->authService = $authService;
     }
     
     #[Route('/notifications/{sub}', name: 'get_especific_user_notifications', methods: ['GET'])]
     public function getEspecificUserNotification(string $sub, EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
-        $authResponse = $this->authController->authenticate($request);
+        $authResponse = $this->authController->authenticate($request, $entityManager);
 
         if ($authResponse->getStatusCode() != Response::HTTP_OK) {
             return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
@@ -56,7 +54,7 @@ class NotificationsController extends AbstractController
     #[Route('/notification/{id}', name: 'get_especific_notifications', methods: ['GET'])]
     public function getEspecificNotification(int $id, EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
-        $authResponse = $this->authController->authenticate($request);
+        $authResponse = $this->authController->authenticate($request, $entityManager);
 
         if ($authResponse->getStatusCode() != Response::HTTP_OK) {
             return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
@@ -75,7 +73,7 @@ class NotificationsController extends AbstractController
     #[Route('/notification/mark-as-read/{id}', name: 'mark_notification_as_read', methods: ['PUT'])]
     public function markNotificationAsRead(int $id, EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
-        $authResponse = $this->authController->authenticate($request);
+        $authResponse = $this->authController->authenticate($request, $entityManager);
 
         if ($authResponse->getStatusCode() != Response::HTTP_OK) {
             return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());

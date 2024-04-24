@@ -11,28 +11,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\EmailSenderService;
 use App\Service\AuthService;
 use App\Controller\AuthController;
 use App\Entity\Event;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use App\Service\EmailSenderService;
 class PurchasesController extends AbstractController
 {
-
     private $authController;
-    private $authService;
 
-    public function __construct(AuthController $authController, AuthService $authService)
+    public function __construct(AuthController $authController)
     {
         $this->authController = $authController;
-        $this->authService = $authService;
     }
 
     #[Route('/purchases', name: 'app_purchases', methods: ['POST'])]
     public function index(Request $request, EntityManagerInterface $entityManager,EmailSenderService $mailerService): Response
     {
-        $authResponse = $this->authController->authenticate($request);
+        $authResponse = $this->authController->authenticate($request, $entityManager);
 
         if ($authResponse->getStatusCode() != Response::HTTP_OK) {
             return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
@@ -52,7 +48,6 @@ class PurchasesController extends AbstractController
         $user = $usersRepository->findOneBy(['sub' => $userId]);
         if($user === null)
             return $this->json(['error' => 'No se ha encontrado el usuario'], 404);
-
 
         $emailTo = $user->getEmail();
         $nameTo = $user->getUsername();

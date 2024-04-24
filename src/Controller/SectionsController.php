@@ -15,18 +15,16 @@ use Symfony\Component\HttpFoundation\Response;
 class SectionsController extends AbstractController
 {
     private $authController;
-    private $authService;
 
-    public function __construct(AuthController $authController, AuthService $authService)
+    public function __construct(AuthController $authController)
     {
         $this->authController = $authController;
-        $this->authService = $authService;
     }
     
     #[Route('/sections/{id}', name: 'get_especific_event_sections', methods: ['GET'])]
     public function getEspecific(int $id, EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
-        $authResponse = $this->authController->authenticate($request);
+        $authResponse = $this->authController->authenticate($request, $entityManager);
 
         if ($authResponse->getStatusCode() != Response::HTTP_OK) {
             return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());

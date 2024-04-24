@@ -18,3 +18,8 @@ migrations/Version20240423090522.php
 migrations/Version20240423101512.php
 migrations/Version20240424063205.php
 migrations/Version20240424074711.php
+.env
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
+.DS_Store
