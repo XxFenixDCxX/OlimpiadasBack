@@ -2,21 +2,23 @@
 
 namespace App\Controller;
 
-use App\Service\AuthService;
+use App\Entity\Users;
+use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends AbstractController
 {
-    private $authService;
+    private $jwtManager;
 
-    public function __construct(AuthService $authService)
+    public function __construct(JWTTokenManagerInterface $jwtManager)
     {
-        $this->authService = $authService;
+        $this->jwtManager = $jwtManager;
     }
 
-    public function authenticate(Request $request): Response
+    public function authenticate(Request $request, EntityManagerInterface $entityManager): Response
     {
         $authHeader = $request->headers->get('Authorization');
         $token = str_replace('Bearer ', '', $authHeader);
@@ -25,9 +27,26 @@ class AuthController extends AbstractController
             return new Response('No token provided', Response::HTTP_UNAUTHORIZED);
         }
 
-        $isValid = $this->authService->validateToken($token);
+        $tokenParts = explode('.', $token);
         
-        if (!$isValid) {
+        if (count($tokenParts) != 3) {
+            return new Response('Invalid token', Response::HTTP_UNAUTHORIZED);
+        }
+
+        $payload = base64_decode($tokenParts[1]);
+
+        $payloadData = json_decode($payload, true);
+
+        if (!isset($payloadData['sub'])) {
+            return new Response('Invalid token', Response::HTTP_UNAUTHORIZED);
+        }
+        
+        $sub = $payloadData['sub'];
+
+        $userRepository = $entityManager->getRepository(Users::class);
+        $user = $userRepository->findOneBy(['sub' => $sub]);
+
+        if(!$user) {
             return new Response('Invalid token', Response::HTTP_UNAUTHORIZED);
         }
 

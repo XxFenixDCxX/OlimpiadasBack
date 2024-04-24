@@ -15,18 +15,16 @@ use Symfony\Component\HttpFoundation\Response;
 class ZonesController extends AbstractController
 {
     private $authController;
-    private $authService;
 
-    public function __construct(AuthController $authController, AuthService $authService)
+    public function __construct(AuthController $authController)
     {
         $this->authController = $authController;
-        $this->authService = $authService;
     }
 
     #[Route('/zones', name: 'get_zones', methods: ['GET'])]
     public function getAll(EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
-        $authResponse = $this->authController->authenticate($request);
+        $authResponse = $this->authController->authenticate($request, $entityManager);
 
         if ($authResponse->getStatusCode() != Response::HTTP_OK) {
             return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());

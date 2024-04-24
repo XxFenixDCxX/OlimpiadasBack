@@ -16,18 +16,16 @@ use App\Service\AuthService;
 class UsersController extends AbstractController
 {
     private $authController;
-    private $authService;
 
-    public function __construct(AuthController $authController, AuthService $authService)
+    public function __construct(AuthController $authController)
     {
         $this->authController = $authController;
-        $this->authService = $authService;
     }
     
     #[Route('/users/{sub}', name: 'get_especific_user', methods: ['GET'])]
     public function getEspecific(string $sub, EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
-        $authResponse = $this->authController->authenticate($request);
+        $authResponse = $this->authController->authenticate($request, $entityManager);
 
         if ($authResponse->getStatusCode() != Response::HTTP_OK) {
             return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
@@ -46,7 +44,7 @@ class UsersController extends AbstractController
     #[Route('/users', name: 'get_users', methods: ['GET'])]
     public function getAll(EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
-        $authResponse = $this->authController->authenticate($request);
+        $authResponse = $this->authController->authenticate($request, $entityManager);
 
         if ($authResponse->getStatusCode() != Response::HTTP_OK) {
             return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
@@ -69,7 +67,7 @@ class UsersController extends AbstractController
     #[Route('/users', name: 'create_users', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        $authResponse = $this->authController->authenticate($request);
+        $authResponse = $this->authController->authenticate($request, $entityManager);
 
         if ($authResponse->getStatusCode() != Response::HTTP_OK) {
             return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
@@ -106,7 +104,7 @@ class UsersController extends AbstractController
     #[Route('/users/{sub}', name: 'update_users_zones', methods: ['PUT'])]
     public function update(string $sub, Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        $authResponse = $this->authController->authenticate($request);
+        $authResponse = $this->authController->authenticate($request, $entityManager);
 
         if ($authResponse->getStatusCode() != Response::HTTP_OK) {
             return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());

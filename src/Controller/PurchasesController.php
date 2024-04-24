@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\EmailSenderService;
 use App\Service\AuthService;
 use App\Controller\AuthController;
 use App\Entity\Event;
@@ -19,20 +18,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PurchasesController extends AbstractController
 {
-
     private $authController;
-    private $authService;
 
-    public function __construct(AuthController $authController, AuthService $authService)
+    public function __construct(AuthController $authController)
     {
         $this->authController = $authController;
-        $this->authService = $authService;
     }
 
     #[Route('/purchases', name: 'app_purchases', methods: ['POST'])]
-    public function index(Request $request, EntityManagerInterface $entityManager,EmailSenderService $mailerService): Response
+    public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $authResponse = $this->authController->authenticate($request);
+        $authResponse = $this->authController->authenticate($request, $entityManager);
 
         if ($authResponse->getStatusCode() != Response::HTTP_OK) {
             return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
@@ -53,7 +49,6 @@ class PurchasesController extends AbstractController
         if($user === null)
             return $this->json(['error' => 'No se ha encontrado el usuario'], 404);
 
-
         $emailTo = $user->getEmail();
         $nameTo = $user->getUsername();
         $textEmail = 'Compra realizada correctamente\n se han comprado los siguientes productos\n';
@@ -61,9 +56,6 @@ class PurchasesController extends AbstractController
         $transaction = new Transactions();
         $transaction->setUserId($userId);
         $entityManager->persist($transaction);
-
-        $totalPrice = 0;
-        $products = [];
 
         foreach ($sections as $section) {
             foreach ($section as $sectionDetails) {
@@ -91,29 +83,7 @@ class PurchasesController extends AbstractController
                 $event = $eventRepository->findOneBy(['id' => $eventId]);
                 $textEmail .= 'Se han comprado ' . $slots . ' voletos en la ' . $section->getDescription() . ' del evento '. $event->getTitle() .'\n';
             }
-
-            $totalPrice += $section->getPrice() * $slots;
-            $products[] = [
-                'name' => 'Descripcion al hacer el PULL',
-                'price' => $section->getPrice(),
-                'quantity' => $slots,
-                'section' => $section->getId()
-            ];
         }
-
-        var_dump($products);
-        return 0; 
-        $subject = "Confirmación de compra";
-        $templateId = 'x2p0347xk69gzdrn';
-        $mailerService->sendEmailPurchase(
-            $user->getEmail(),
-            $user->getUsername(),
-            $totalPrice,
-            $transaction->getId(), 
-            $subject,
-            $templateId,
-            $products
-        );
 
         $entityManager->flush();
         return $this->json(['message' => 'Compra realizada correctamente'], 200);
