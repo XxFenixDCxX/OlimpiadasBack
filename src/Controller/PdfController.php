@@ -9,18 +9,9 @@ use TCPDF;
 
 class PdfController extends AbstractController
 {
-    #[Route('/generate-pdf', name: 'generate_pdf', methods: ['GET'])]
-    public function generatePdf(): Response
+    public function generatePdf($userEmail, $username, $totalPrice, $transactionId, $products): Response
     {
-        $userEmail = 'correo@example.com';
-        $username = 'Usuario Ejemplo';
-        $totalPrice = '$100.00';
-        $transactionId = '123456789';
         $subject = 'Detalles de la compra';
-        $products = [
-            ['name' => 'Producto 1', 'quantity' => 2, 'price' => '$50.00'],
-            ['name' => 'Producto 2', 'quantity' => 3, 'price' => '$50.00'],
-        ];
         
         $html = $this->renderView(
             'pdf/purchase_receipt.html.twig',

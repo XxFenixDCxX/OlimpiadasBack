@@ -111,7 +111,13 @@ class PurchasesController extends AbstractController
 
         $entityManager->flush();
 
-        $pdfResponse = $this->forward(PdfController::class.'::generatePdf');
+        $pdfResponse = $this->forward(PdfController::class.'::generatePdf', [
+            'userEmail' => $user->getEmail(),
+            'username' => $user->getUsername(),
+            'totalPrice' => $totalPrice,
+            'transactionId' => $transaction->getId(),
+            'products' => $products
+        ]);      
         
         $mailerService->sendEmailPurchase(
             $user->getEmail(),
