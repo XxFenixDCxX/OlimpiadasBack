@@ -84,7 +84,7 @@ class PurchasesController extends AbstractController
                 $eventId = $section->getEvent()->getId();
                 $eventRepository = $entityManager->getRepository(Event::class);
                 $event = $eventRepository->findOneBy(['id' => $eventId]);
-                $textEmail .= 'Se han comprado ' . $slots . ' voletos en la ' . $section->getDescription() . ' del evento '. $event->getTitle() .'\n';
+                $textEmail .= 'Se han comprado ' . $slots . ' boletos en la ' . $section->getDescription() . ' del evento '. $event->getTitle() .'\n';
             }
 
             $totalPrice += $section->getPrice() * $slots;
@@ -98,6 +98,7 @@ class PurchasesController extends AbstractController
 
         $subject = "Confirmación de compra";
         $templateId = 'x2p0347xk69gzdrn';
+
         $mailerService->sendEmailPurchase(
             $user->getEmail(),
             $user->getUsername(),

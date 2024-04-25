@@ -69,12 +69,7 @@ class EmailSenderService
                     'total' => $totalPrice,
                     'order_number' => $orderNumber
                 ],
-                'product' => [
-                    'name' => 'Funciona correctamente 1',
-                    'price' => 'FUniona correctamente 2',
-                    'section' => 'Funciona correctamente 4',
-                    'quantity' => 'Funciona correctamente 3'
-                ],
+                'product' => $productDetails 
             ])
         ];
     
