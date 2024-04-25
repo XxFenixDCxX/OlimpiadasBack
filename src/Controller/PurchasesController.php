@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Service\AuthService;
 use App\Controller\AuthController;
 use App\Entity\Event;
+use App\Entity\Notifications;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\EmailSenderService;
 class PurchasesController extends AbstractController
@@ -55,7 +56,6 @@ class PurchasesController extends AbstractController
         $transaction = new Transactions();
         $transaction->setUserId($userId);
         $entityManager->persist($transaction);
-        $orderNumber = 1;
 
         $totalPrice = 0;
         $products = [];
@@ -85,42 +85,41 @@ class PurchasesController extends AbstractController
                 $eventRepository = $entityManager->getRepository(Event::class);
                 $event = $eventRepository->findOneBy(['id' => $eventId]);
                 $textEmail .= 'Se han comprado ' . $slots . ' boletos en la ' . $section->getDescription() . ' del evento '. $event->getTitle() .'\n';
+                $products[] = [
+                    'name' => $event->getTitle(),
+                    'price' => $section->getPrice(),
+                    'section' => $section->getDescription(),
+                    'quantity' => $slots
+                ];
+
+                $totalPrice += $section->getPrice() * $slots;
             }
-
-            $totalPrice += $section->getPrice() * $slots;
-
         }
-        $products = [
-            [
-                'name' => 'name43',
-                'price' => 'price43',
-                'section' => 'section43',
-                'quantity' => 'quantity43'
-            ],
-            [
-                'name' => 'name561',
-                'price' => 'price561',
-                'section' => 'section561',
-                'quantity' => 'quantity561'
-            ]
-        ];
-        
-
 
         $subject = "Confirmación de compra";
         $templateId = 'x2p0347xk69gzdrn';
+
+
+
+        $notification = new Notifications();
+        $notification->setSubject($subject);
+        $notification->setShortText("Compra realizada correctamente");
+        $notification->setLongMessage("La compra de entradas se ha realizado correctamente para el usuario " . $user->getUsername() . ". Para visualizar la compra de entradas realizada, acceda a su correo electronico.");
+        $notification->setIsReaded(false);
+        $user->addNotification($notification);
+        $entityManager->persist($notification);
+
+        $entityManager->flush();
 
         $mailerService->sendEmailPurchase(
             $user->getEmail(),
             $user->getUsername(),
             $totalPrice,
-            'Order number 45', 
+            $transaction->getId(), 
             $subject,
             $templateId,
             $products
         );
-
-        $entityManager->flush();
         return $this->json(['message' => 'Compra realizada correctamente'], 200);
     }
 
