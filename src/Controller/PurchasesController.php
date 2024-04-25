@@ -49,13 +49,13 @@ class PurchasesController extends AbstractController
         if($user === null)
             return $this->json(['error' => 'No se ha encontrado el usuario'], 404);
 
-        $emailTo = $user->getEmail();
-        $nameTo = $user->getUsername();
+
         $textEmail = 'Compra realizada correctamente\n se han comprado los siguientes productos\n';
 
         $transaction = new Transactions();
         $transaction->setUserId($userId);
         $entityManager->persist($transaction);
+        $orderNumber = 1;
 
         $totalPrice = 0;
         $products = [];
@@ -88,13 +88,24 @@ class PurchasesController extends AbstractController
             }
 
             $totalPrice += $section->getPrice() * $slots;
-            $products[] = [
-                'name' => 'Descripcion al hacer el PULL',
-                'price' => $section->getPrice(),
-                'quantity' => $slots,
-                'section' => $section->getId()
-            ];
+
         }
+        $products = [
+            [
+                'name' => 'name43',
+                'price' => 'price43',
+                'section' => 'section43',
+                'quantity' => 'quantity43'
+            ],
+            [
+                'name' => 'name561',
+                'price' => 'price561',
+                'section' => 'section561',
+                'quantity' => 'quantity561'
+            ]
+        ];
+        
+
 
         $subject = "Confirmación de compra";
         $templateId = 'x2p0347xk69gzdrn';
@@ -103,7 +114,7 @@ class PurchasesController extends AbstractController
             $user->getEmail(),
             $user->getUsername(),
             $totalPrice,
-            $transaction->getId(), 
+            'Order number 45', 
             $subject,
             $templateId,
             $products
