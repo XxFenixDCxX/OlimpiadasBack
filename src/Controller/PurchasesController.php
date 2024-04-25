@@ -112,7 +112,7 @@ class PurchasesController extends AbstractController
         return $this->json(['message' => 'Compra realizada correctamente'], 200);
     }
 
-    #[Route('/purchases', name: 'allow_add_to_car', methods: ['GET'])]
+    #[Route('/purchaseShopCart', name: 'allow_add_to_car', methods: ['POST'])]
     public function allowAddToCar(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
