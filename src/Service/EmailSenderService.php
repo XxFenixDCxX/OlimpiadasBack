@@ -47,7 +47,7 @@ class EmailSenderService
     }
 
 
-    public function sendEmailPurchase($to, $nameTo, $totalPrice, $orderNumber, $subject, $templateId, $products)
+    public function sendEmailPurchase($to, $nameTo, $totalPrice, $orderNumber, $subject, $templateId, $products, $pdfContent)
     {
         $from = 'info@trial-x2p0347y88p4zdrn.mlsender.net';
         $fromName = 'Olympics-noreply';
@@ -61,6 +61,14 @@ class EmailSenderService
                 'section' => $product['section']
             ];
         }
+
+        $attachments = [
+            [
+                'content' => base64_encode($pdfContent),
+                'filename' => 'purchase_receipt.pdf',
+                'type' => 'application/pdf'
+            ]
+        ];
 
         $personalizationParams = [
             new Personalization($to, [
@@ -83,7 +91,8 @@ class EmailSenderService
             ->setRecipients($recipients)
             ->setSubject($subject)
             ->setTemplateId($templateId)
-            ->setPersonalization($personalizationParams);
+            ->setPersonalization($personalizationParams)
+            ->setAttachments($attachments);
     
         $this->mailersend->email->send($emailParams);
     }

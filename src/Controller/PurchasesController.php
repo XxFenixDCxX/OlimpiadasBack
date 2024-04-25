@@ -111,6 +111,8 @@ class PurchasesController extends AbstractController
 
         $entityManager->flush();
 
+        $pdfResponse = $this->forward(PdfController::class.'::generatePdf');
+        
         $mailerService->sendEmailPurchase(
             $user->getEmail(),
             $user->getUsername(),
@@ -118,7 +120,8 @@ class PurchasesController extends AbstractController
             $transaction->getId(), 
             $subject,
             $templateId,
-            $products
+            $products,
+            $pdfResponse->getContent()
         );
         return $this->json(['message' => 'Compra realizada correctamente'], 200);
     }
