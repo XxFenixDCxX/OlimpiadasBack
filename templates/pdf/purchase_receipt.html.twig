@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Compra realizada</title>
+    <style>
+        /* Estilos CSS para el PDF */
+        body {
+            font-family: Arial, sans-serif; 
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .info {
+            margin-bottom: 20px;
+        }
+        .info p {
+            margin: 5px 0;
+        }
+        .products {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .products th, .products td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .products th {
+            text-align: left;
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Compra realizada</h2>
+            <p>Detalles de la compra:</p>
+        </div>
+        <div class="info">
+            <p><strong>Email:</strong> {{ userEmail }}</p>
+            <p><strong>Usuario:</strong> {{ username }}</p>
+            <p><strong>Total:</strong> {{ totalPrice }}</p>
+            <p><strong>ID de Transacción:</strong> {{ transactionId }}</p>
+            <p><strong>Asunto:</strong> {{ subject }}</p>
+        </div>
+        <table class="products">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.quantity}}</td>
+                    <td>{{ product.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
