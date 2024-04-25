@@ -42,7 +42,9 @@ class SectionsController extends AbstractController
 
         $sectionsArray = [];
         foreach ($sections as $section) {
-            $sectionsArray[] = $section->toArray();
+            if($section->getSlots() != null && $section->getSlots() != 0){
+                $sectionsArray[] = $section->toArray();
+            }
         }
         return $this->json($sectionsArray);
     }
