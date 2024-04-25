@@ -112,4 +112,81 @@ class PurchasesController extends AbstractController
         $entityManager->flush();
         return $this->json(['message' => 'Compra realizada correctamente'], 200);
     }
+
+    #[Route('/purchaseShopCart', name: 'allow_add_to_car', methods: ['POST'])]
+    public function allowAddToCar(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+    
+        if (!isset($data['sub']) || empty($data['sections'])) {
+            return $this->json(['error' => 'El campo "sub" y "sections" son requeridos y no pueden estar vacíos'], 400);
+        }
+    
+        $authResponse = $this->authController->authenticate($request, $entityManager);
+    
+        if ($authResponse->getStatusCode() != Response::HTTP_OK) {
+            return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
+        }
+    
+        $user = $entityManager->getRepository(Users::class)->findOneBy([
+            'sub' => $data['sub']
+        ]);
+    
+        if ($user === null) {
+            return $this->json(['error' => 'El usuario no existe'], 400);
+        }
+    
+        $purchasesHistory = $entityManager->getRepository(PurchasesHistory::class)->findBy([
+            'user' => $user
+        ]);
+    
+        $totalEvents = 0;
+        $totalSlots = [];
+    
+        foreach ($purchasesHistory as $purchase) {
+            $eventId = $purchase->getSection()->getEvent()->getId();
+            if (!isset($totalSlots[$eventId])) {
+                $totalSlots[$eventId] = 0;
+                $totalEvents++;
+            }
+            $totalSlots[$eventId] += $purchase->getSlots();
+        }
+    
+        foreach ($data['sections'] as $section) {
+            if (empty($section['id']) || empty($section['slots'])) {
+                return $this->json(['error' => 'Los campos "id" y "slots" son requeridos y no pueden estar vacíos en cada sección'], 400);
+            }
+    
+            $sectionEntity = $entityManager->getRepository(Section::class)->findOneBy([
+                'id' => $section['id']
+            ]);
+    
+            if ($sectionEntity === null) {
+                return $this->json(['error' => 'La sección con ID ' . $section['id'] . ' no existe'], 400);
+            }
+    
+            $eventId = $sectionEntity->getEvent()->getId();
+            $slots = $section['slots'];
+    
+            if ($totalEvents >= 3) {
+                return $this->json(['error' => 'El usuario ya ha comprado el máximo de eventos diferentes permitidos, que son 3'], 400);
+            }
+    
+            if (isset($totalSlots[$eventId]) && $totalSlots[$eventId] + $slots > 5) {
+                $event = $entityManager->getRepository(Event::class)->findOneBy([
+                    'id' => $eventId
+                ]);
+                return $this->json(['error' => 'El usuario excede el límite de entradas permitidas máximas para el evento de '.$event->getTitle().', que son 5'], 400);
+            }
+
+            if (!isset($totalSlots[$eventId])) {
+                $totalSlots[$eventId] = 0;
+                $totalEvents++;
+            }
+            $totalSlots[$eventId] += $slots;
+        }
+    
+        return $this->json(['message' => 'Agregado al carrito correctamente'], 200);
+    }
+    
 }

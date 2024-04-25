@@ -48,4 +48,35 @@ class AuthController extends AbstractController
 
         return new Response('Authenticated successfully', Response::HTTP_OK);
     }
+
+    public function authenticateWithSub(Request $request, $subSender){
+        $authHeader = $request->headers->get('Authorization');
+        $token = str_replace('Bearer ', '', $authHeader);
+
+        if (!$token) {
+            return new Response('No token provided', Response::HTTP_UNAUTHORIZED);
+        }
+
+        $tokenParts = explode('.', $token);
+        
+        if (count($tokenParts) != 3) {
+            return new Response('Invalid token', Response::HTTP_UNAUTHORIZED);
+        }
+
+        $payload = base64_decode($tokenParts[1]);
+
+        $payloadData = json_decode($payload, true);
+
+        if (!isset($payloadData['sub'])) {
+            return new Response('Invalid token', Response::HTTP_UNAUTHORIZED);
+        }
+        
+        $sub = $payloadData['sub'];
+
+        if(strcasecmp($sub, $subSender) != 0){
+            return new Response('Invalid token', Response::HTTP_UNAUTHORIZED);
+        }
+
+        return new Response('Authenticated successfully', Response::HTTP_OK);
+    }
 }
