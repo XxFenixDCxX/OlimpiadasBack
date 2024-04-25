@@ -25,6 +25,12 @@ class UsersController extends AbstractController
     #[Route('/users/{sub}', name: 'get_especific_user', methods: ['GET'])]
     public function getEspecific(string $sub, EntityManagerInterface $entityManager, Request $request): JsonResponse
     {
+        $authResponse = $this->authController->authenticateWithSub($request, $sub);
+
+        if ($authResponse->getStatusCode() != Response::HTTP_OK) {
+            return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
+        }
+
         $userRepository = $entityManager->getRepository(Users::class);
         
         $user = $userRepository->findOneBy(['sub' => $sub]);
@@ -65,6 +71,12 @@ class UsersController extends AbstractController
 
         if (!isset($data['sub']) || empty($data['sub']) || !isset($data['email']) || empty($data['email']) || !isset($data['username']) || empty($data['username'])) {
             return $this->json(['error' => 'El campo "sub", "email" y "username" es requerido y no puede estar vacío'], 400);
+        }
+
+        $authResponse = $this->authController->authenticateWithSub($request, $data['sub']);
+
+        if ($authResponse->getStatusCode() != Response::HTTP_OK) {
+            return new JsonResponse($authResponse->getContent(), $authResponse->getStatusCode());
         }
 
         $existingUser = $entityManager->getRepository(Users::class)->findOneBy([
